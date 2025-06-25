@@ -1,29 +1,24 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Request
 from PIL import Image
 import io
+import numpy as np
+import tensorflow as tf
 
 from utils.tomato_leaf_detector import is_tomato_leaf  
+from utils.validate_image import validate_image_file
 
 
 app = FastAPI(title="Tomato Disease Classifier API")
 
-MAX_SIZE = 2 * 1024 * 1024  # 2MB
+MODEL_PATH =  "model/tomato_disease_classifier.keras"
+MODEL= tf.keras.models.load_model(MODEL_PATH, compile=False)
+CLASS_NAMES = ['Tomato_Early_blight', 'Tomato_Late_blight', 'Tomato_Leaf_Mold','Tomato_healthy']
 
-def validate_image_file(file: UploadFile, max_size: int = MAX_SIZE):
-    allowed_types = ["image/png", "image/jpeg"]
-    
-    # Validate content type
-    if file.content_type not in allowed_types:
-        raise HTTPException(status_code=400, detail=f"Uploaded file must be one of: {', '.join(allowed_types)}.")
-    
-    # Validate size
-    file.file.seek(0, 2)  # Move to end
-    size = file.file.tell()
-    file.file.seek(0)  # Reset to start
-    
-    if size > max_size:
-        raise HTTPException(status_code=400, detail=f"Uploaded file must be smaller than {max_size / (1024 * 1024):.2f} MB.")
-    
+def get_normalized_image(data: bytes) -> np.ndarray:
+    image = Image.open(io.BytesIO(data)).convert('RGB')
+    image = image.resize((256, 256))
+    return np.array(image) / 255.0
+
 @app.post("/classify")
 async def classify_tomato_leaf(file: UploadFile = File(...), request: Request = None):
     # Validate the uploaded file
@@ -36,7 +31,20 @@ async def classify_tomato_leaf(file: UploadFile = File(...), request: Request = 
     # Check if it's a tomato leaf
     is_leaf = is_tomato_leaf(image_pil)
 
-        
+    if not is_leaf:
+        raise HTTPException(
+            status_code=400,
+            detail="Image is not a tomato leaf. Please upload a valid tomato leaf image."
+        )
+
+    # Predict disease using the CNN model 
+    image_np = get_normalized_image(raw_data)
+    img_batch = np.expand_dims(image_np, axis=0)
+    predictions = MODEL.predict(img_batch, verbose=0)
+    predicted_class = CLASS_NAMES[np.argmax(predictions[0])]
+    confidence = float(np.max(predictions[0]))
+
     return {
-        "is_tomato_leaf": is_leaf
+        "class": predicted_class,
+        "confidence": confidence
     }
