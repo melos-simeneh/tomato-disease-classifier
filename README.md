@@ -20,7 +20,7 @@ A lightweight web-based tool for identifying diseases in tomato plant leaves usi
 
 ## 🖼️ Workflow Architecture
 
-📌 Diagram
+### 📌 Diagram
 
 ![Workflow](screenshots/workflow.png)
 
@@ -95,7 +95,7 @@ A lightweight web-based tool for identifying diseases in tomato plant leaves usi
 
   - Custom CNN (TensorFlow/Keras)
 
-## 🗂 Project Structure
+## 🗂️ Project Structure
 
 ```bash
 tomato-disease-classifier/
@@ -116,7 +116,7 @@ tomato-disease-classifier/
 
 Before running the Tomato Disease Classifier, ensure you have the following installed on your system:
 
-## 🖥 System Requirements
+## 💻 System Requirements
 
 - Python ≥ 3.8
 
@@ -153,7 +153,7 @@ npm run build
 cd..
 ```
 
-✅ This builds the production-ready frontend files into the `/dist` directory, which the backend uses to serve the SPA.
+This builds the production-ready frontend files into the `/dist` directory, which the backend uses to serve the SPA.
 
 ### 🧠 Backend Setup
 
@@ -195,6 +195,6 @@ uvicorn main:app --port 5000
 }
 ```
 
-## 🧑‍💻 Author
+## 👨‍💻 Author
 
 Built with 💚 by Melos
