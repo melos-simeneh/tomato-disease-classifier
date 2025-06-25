@@ -39,6 +39,10 @@ if FRONTEND_DIST.exists() and (FRONTEND_DIST / "index.html").exists():
     @app.get("/")
     async def serve_spa():
         return FileResponse(FRONTEND_DIST / "index.html")
+    
+    @app.get("/favicon.png")
+    async def favicon():
+        return FileResponse(FRONTEND_DIST / "favicon.png")
 
 
 def get_normalized_image(data: bytes) -> np.ndarray:
