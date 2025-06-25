@@ -1,8 +1,13 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Request
 from PIL import Image
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import io
 import numpy as np
 import tensorflow as tf
+import io
+from pathlib import Path
 
 from utils.tomato_leaf_detector import is_tomato_leaf  
 from utils.validate_image import validate_image_file
@@ -10,9 +15,31 @@ from utils.validate_image import validate_image_file
 
 app = FastAPI(title="Tomato Disease Classifier API")
 
-MODEL_PATH =  "model/tomato_disease_classifier.keras"
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+BASE_DIR = Path(__file__).resolve().parent
+FRONTEND_DIST = BASE_DIR.parent / "frontend" / "dist"
+
+MODEL_PATH = BASE_DIR / "model" / "tomato_disease_classifier.keras"
 MODEL= tf.keras.models.load_model(MODEL_PATH, compile=False)
+
 CLASS_NAMES = ['Tomato_Early_blight', 'Tomato_Late_blight', 'Tomato_Leaf_Mold','Tomato_healthy']
+
+# Serve React frontend only if built files exist
+if FRONTEND_DIST.exists() and (FRONTEND_DIST / "index.html").exists():
+    app.mount("/assets", StaticFiles(directory=FRONTEND_DIST / "assets"), name="assets")
+
+    @app.get("/")
+    async def serve_spa():
+        return FileResponse(FRONTEND_DIST / "index.html")
+
 
 def get_normalized_image(data: bytes) -> np.ndarray:
     image = Image.open(io.BytesIO(data)).convert('RGB')
