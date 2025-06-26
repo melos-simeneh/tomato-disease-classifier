@@ -50,7 +50,7 @@ A lightweight web-based tool for identifying diseases in tomato plant leaves usi
 
 ## 🤖 Model Info
 
-### 🧠 CLIP + Binary Classifier (`optional`) (Filtering Stage)
+### 🧠 CLIP + Binary Classifier (`optional`) - (Filtering Stage)
 
 - **CLIP Model** (`clip-vit-base-patch32` + `nlpconnect/vit-gpt2-image-captioning`, OpenAI):
 Performs initial filtering using text-image similarity with prompts like “a photo of a tomato leaf” to check if the image contains a plant or leaf.
@@ -79,7 +79,7 @@ Combined, these models ensure only valid tomato leaf images are passed to the di
 
 ## 📂 Datasets & Model Training
 
-## 🗃 Dataset Location
+### 🗃 Dataset Location
 
 All datasets used for training both the binary and multi-class CNN classifiers are located in:
 
@@ -91,7 +91,7 @@ backend/data/
 
 - `PlantVillage.zip` – For multi-class disease classification (4 tomato leaf diseases from PlantVillage)
 
-## 📓 Training Notebooks
+### 📓 Training Notebooks
 
 The model training code (in Colab format) is available locally in the repository:
 
