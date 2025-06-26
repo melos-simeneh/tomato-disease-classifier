@@ -61,7 +61,7 @@ Further refines the filter by verifying whether the detected leaf is specificall
 - **Purpose**:
 Combined, these models ensure only valid tomato leaf images are passed to the disease classification stage.
 
-### CNN Disease Classifier
+### 🔬 CNN Disease Classifier
 
 - Framework: TensorFlow (Keras)
 
@@ -76,6 +76,34 @@ Combined, these models ensure only valid tomato leaf images are passed to the di
 - Accuracy: ~97% on validation set
 
 - Exported as: `tomato_disease_classifier.keras`
+
+## 📂 Datasets & Model Training
+
+## 🗃 Dataset Location
+
+All datasets used for training both the binary and multi-class CNN classifiers are located in:
+
+```text
+backend/data/
+```
+
+- `BinaryPlantVillage.zip` – For binary classification (tomato leaf vs non-tomato leaf)
+
+- `PlantVillage.zip` – For multi-class disease classification (4 tomato leaf diseases from PlantVillage)
+
+## 📓 Training Notebooks
+
+The model training code (in Colab format) is available locally in the repository:
+
+```text
+backend/training/
+```
+
+- `binary_classifier_training.ipynb` – Training notebook for the tomato leaf **binary classifier**
+
+- `disease_classifier_training.ipynb` – Training notebook for the **multi-class disease classifier**
+
+You can open and run these notebooks locally using Google Colab.
 
 ## 📷 Screenshots
 
