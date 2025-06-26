@@ -6,7 +6,7 @@ A lightweight web-based tool for identifying diseases in tomato plant leaves usi
 
 - ✅ Upload validation (JPG/PNG under 2MB)
 
-- 🧠 CLIP + Binary Classifier filtering (rejects non-tomato leaf images)
+- 🧠 CLIP + Binary Classifier(optional) filtering (rejects non-tomato leaf images)
 
 - 🌿 CNN model for classifying 4 tomato leaf diseases
 
@@ -30,7 +30,7 @@ A lightweight web-based tool for identifying diseases in tomato plant leaves usi
 1. [User] Uploads image (JPG/PNG <2MB)
 2. [Frontend] Validates file type/size
 3. [Backend] Receives image via POST /classify
-4. [Backend] Filter Stage (CLIP + Binary Classifier)
+4. [Backend] Filter Stage (CLIP + Binary Classifier(optional))
    ├─ CLIP checks if image contains plant leaf:
    │   ├─ No → Returns 400: "Not a tomato leaf"
    │   └─ Yes → Proceeds
@@ -50,7 +50,7 @@ A lightweight web-based tool for identifying diseases in tomato plant leaves usi
 
 ## 🤖 Model Info
 
-### 🧠 CLIP + Binary Classifier (Filtering Stage)
+### 🧠 CLIP + Binary Classifier (`optional`) (Filtering Stage)
 
 - **CLIP Model** (`clip-vit-base-patch32` + `nlpconnect/vit-gpt2-image-captioning`, OpenAI):
 Performs initial filtering using text-image similarity with prompts like “a photo of a tomato leaf” to check if the image contains a plant or leaf.
