@@ -22,6 +22,7 @@ export default function TomatoClassifierForm() {
   const [error, setError] = useState(null);
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef(null);
+  const [useBinaryFilter, setUseBinaryFilter] = useState(true);
 
   // Create and clean up preview URL when file changes
   useEffect(() => {
@@ -97,11 +98,14 @@ export default function TomatoClassifierForm() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-      const response = await fetch("http://localhost:5000/classify", {
-        method: "POST",
-        body: formData,
-        signal: controller.signal,
-      });
+      const response = await fetch(
+        `http://localhost:5000/classify?use_binary_for_filter=${useBinaryFilter}`,
+        {
+          method: "POST",
+          body: formData,
+          signal: controller.signal,
+        }
+      );
 
       clearTimeout(timeoutId);
 
@@ -349,6 +353,20 @@ export default function TomatoClassifierForm() {
             </div>
           </div>
         )}
+        {/* Binary classification toggle */}
+        <div className="flex items-center space-x-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            id="useBinaryFilter"
+            checked={useBinaryFilter}
+            onChange={(e) => setUseBinaryFilter(e.target.checked)}
+            disabled={isLoading}
+            className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+          />
+          <label htmlFor="useBinaryFilter" className="cursor-pointer">
+            Use binary classifier for tomato leaf filtering
+          </label>
+        </div>
 
         <div className="flex flex-col space-y-4">
           <button

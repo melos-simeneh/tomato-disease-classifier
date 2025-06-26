@@ -35,7 +35,7 @@ def binary_prediction(img):
     return predicted_class, confidence
 
 
-def is_tomato_leaf(input_image: Image.Image, confidence_threshold: float = 0.65) -> bool:
+def is_tomato_leaf(input_image: Image.Image,use_binary, confidence_threshold: float = 0.65) -> bool:
     candidate_labels = [
         "a photo of a healthy tomato leaf",
         "a photo of a diseased tomato leaf",
@@ -58,12 +58,15 @@ def is_tomato_leaf(input_image: Image.Image, confidence_threshold: float = 0.65)
     tomato_related_prob = first_image_probs[:3].sum().item()
     
     caption = generate_caption(input_image)
+    if use_binary:
+        if (
+        tomato_related_prob >= confidence_threshold and
+        any(phrase in caption for phrase in ["green plant", "green leaf"])
+        ):
+            b_predicted_class, confidence = binary_prediction(input_image)
 
-    if (
-    tomato_related_prob >= confidence_threshold and
-    any(phrase in caption for phrase in ["green plant", "green leaf"])
-    ):
-        b_predicted_class, confidence = binary_prediction(input_image)
-        return b_predicted_class == "tomato_leaf"
+            return b_predicted_class == "tomato_leaf"
 
-    return False
+        return False
+    else:
+        return  tomato_related_prob >= confidence_threshold

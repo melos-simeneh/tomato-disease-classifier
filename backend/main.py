@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Request
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request,Query
 from PIL import Image
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -51,7 +51,9 @@ def get_normalized_image(data: bytes) -> np.ndarray:
     return np.array(image) / 255.0
 
 @app.post("/classify")
-async def classify_tomato_leaf(file: UploadFile = File(...), request: Request = None):
+async def classify_tomato_leaf(file: UploadFile = File(...)
+                                ,use_binary_for_filter: bool = Query(True, description="Use binary classifier with CLIP for filtering"), 
+                                    request: Request = None):
     # Validate the uploaded file
     validate_image_file(file)
 
@@ -60,7 +62,7 @@ async def classify_tomato_leaf(file: UploadFile = File(...), request: Request = 
     image_pil = Image.open(io.BytesIO(raw_data)).convert("RGB")
 
     # Check if it's a tomato leaf
-    is_leaf = is_tomato_leaf(image_pil)
+    is_leaf = is_tomato_leaf(image_pil,use_binary_for_filter)
 
     if not is_leaf:
         raise HTTPException(
