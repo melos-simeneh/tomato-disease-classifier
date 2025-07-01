@@ -178,7 +178,7 @@ git --version
 ### 🧬 Clone the Repo
 
 ```bash
-git clone https://github.com/yourusername/tomato-disease-classifier.git
+git clone https://github.com/melos-simeneh/tomato-disease-classifier.git
 cd tomato-disease-classifier
 ```
 
